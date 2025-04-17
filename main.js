@@ -5,6 +5,7 @@ const path = require('node:path')
 
 const createWindow = () => {
   // 新建窗口
+  //  让窗口加载了一个界面，这个界面就是用web 技术实现 ，这个界面是运行在渲染进程中的 
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -13,9 +14,15 @@ const createWindow = () => {
     }
   })
 
-  // 让主窗口加载文件 html文件
+  // 让主窗口加载文件 html文件，显示具体内容
   mainWindow.loadFile('index.html')
+mainWindow.webContents.on('did-finish-load',()=>{
+  console.log('333---did-finish-load')
+})
 
+mainWindow.webContents.on('dom-ready',()=>{
+  console.log('22---dom-ready')
+})
   const menu=Menu.buildFromTemplate([
     {
       label: app.name,
@@ -33,6 +40,11 @@ const createWindow = () => {
   ])
   Menu.setApplicationMenu(menu)
 
+
+  mainWindow.on('close',()=>{
+    console.log('8888----close window')
+    mainWindow=null
+  })
    // Open the DevTools.
   //  mainWindow.webContents.openDevTools()
 }
@@ -60,7 +72,7 @@ app.on('ready', () => {
   ipcMain.on('counter-value', (_event, value) => {
     console.log(value) // will print value to Node console
   })
-
+console.log('1111---ready')
   
   createWindow()
   app.on('activate', () => {
@@ -74,6 +86,22 @@ app.on('ready', () => {
 // 对应用程序和它们的菜单栏来说应该时刻保持激活状态, 
 // 直到用户使用 Cmd + Q 明确退出
 app.on('window-all-closed', () => {
+  console.log('44444----window-all-closed')
+  if (process.platform !== 'darwin') app.quit()
+})
+
+
+app.on('before-quit', () => {
+  console.log('555----before-quit')
+})
+
+app.on('will-quit', () => {
+  console.log('6666----will-quit')
+  if (process.platform !== 'darwin') app.quit()
+})
+
+app.on('quit', () => {
+  console.log('7777----quit')
   if (process.platform !== 'darwin') app.quit()
 })
 
