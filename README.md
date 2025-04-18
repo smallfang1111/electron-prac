@@ -56,8 +56,8 @@ Alternatively, clone and run the
 repository to see a minimal Electron app in action:
 
 ```sh
-git clone https://github.com/electron/electron-quick-start
-cd electron-quick-start
+git clone git@github.com:smallfang1111/electron-prac.git
+cd electron-prac
 npm install
 npm start
 ```
