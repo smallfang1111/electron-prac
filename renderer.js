@@ -25,11 +25,16 @@
 // })
 
 // 构建渲染器进程 UI
-const counter = document.getElementById('counter')
+// const counter = document.getElementById('counter')
 
-window.electronAPI.onUpdateCounter((value) => {
-  const oldValue = Number(counter.innerText)
-  const newValue = oldValue + value
-  counter.innerText = newValue.toString()
-  window.electronAPI.counterValue(newValue)
-})
+// window.electronAPI.onUpdateCounter((value) => {
+//   const oldValue = Number(counter.innerText)
+//   const newValue = oldValue + value
+//   counter.innerText = newValue.toString()
+//   window.electronAPI.counterValue(newValue)
+// })
+
+const { ipcRenderer } = require('electron');
+document.getElementById('btn').addEventListener('click', () => {
+  ipcRenderer.send('create-new-window');
+});

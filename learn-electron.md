@@ -2,6 +2,8 @@
 
 # Electron 集成了chromium 与 Node.js
 
+# electron 多进程模型 
+
 # 技术架构
 ## Chromium：支持最新特性的浏览器 支持 es6,es7,html,css
 ## Node.js：JavaScript运行时，可实现文件读写，本地命令的调用和执行操作等
@@ -14,13 +16,18 @@
 # 主进程
 ## 可以看做是package.json 中 main 属性对应的文件
 ## 一个应用只会有一个主进程
+## 主进程在Node.js 环境中运行，意味着他能够使用require 模块并使用所有Node.js API
 ## 只有主进程可以进行GUI(图形用户界面)的API操作
+## 主进程的主要目的是使用BrowserWindow 模块创建和管理应用程序
 
 
 
-# 渲染进程
-## windows 中展示的界面通过渲染进程表现
+
+# 渲染器进程
+## 每个electron 应用都会为每个打开的BrowerWindow（与每个网页嵌入）生成一个单独的渲染器进程。
+## windows 中展示的界面通过渲染器进程渲染
 ## 一个应用可以有多个渲染进程
+## 因此，一个浏览器窗口的所有的用户界面和应用功能，都应该是在网页开发上使用相同的工具和规范来写（如html，css，js，vue，react）----因此这也意味着渲染器无权直接访问require或其他Node.js API.
 
 # electron 生命周期
 ## ready:app 初始化完成

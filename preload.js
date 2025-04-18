@@ -1,5 +1,5 @@
 // 预加载脚本
-const { contextBridge ,ipcRenderer} = require('electron')
+const { contextBridge, ipcRenderer} = require('electron')
 
 // 所有的 Node.js API接口 都可以在 preload 进程中被调用.
 // 它拥有与Chrome扩展一样的沙盒。
@@ -8,7 +8,7 @@ const { contextBridge ,ipcRenderer} = require('electron')
 //       const element = document.getElementById(selector)
 //       if (element) element.innerText = text
 //     }
-  
+
 //     for (const dependency of ['chrome', 'node', 'electron']) {
 //       replaceText(`${dependency}-version`, process.versions[dependency])
 //     }
@@ -35,8 +35,10 @@ const { contextBridge ,ipcRenderer} = require('electron')
 //   openFile:()=>ipcRenderer.invoke('dialog:openFile')
 // })
 
-contextBridge.exposeInMainWorld('electronAPI', {
-  onUpdateCounter: (callback) => ipcRenderer.on('update-counter', (_event, value) => callback(value)),
-  counterValue: (value) => ipcRenderer.send('counter-value', value)
-})
+
+// contextBridge.exposeInMainWorld('electronAPI', {
+//   onUpdateCounter: (callback) => ipcRenderer.on('update-counter', (_event, value) => callback(value)),
+//   counterValue: (value) => ipcRenderer.send('counter-value', value)
+// })
 //预加载脚本之后 你的渲染器进程应该可以访问 window.electronAPI.onUpdateCounter() 监听器函数。
+
