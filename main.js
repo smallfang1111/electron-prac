@@ -6,12 +6,12 @@ const path = require('node:path')
 const createWindow = () => {
   // 新建窗口
   //  让窗口加载了一个界面，这个界面就是用web 技术实现 ，这个界面是运行在渲染进程中的 
-  const mainWindow = new BrowserWindow({
+  let mainWindow = new BrowserWindow({
     width: 1000,
     height: 900,
     title: 'alita learn',
     backgroundColor: '#fff',
-    frame: true, // 用于自定义menu 设置为false 可以将默认的菜单栏隐藏
+    frame: false, // 用于自定义menu 设置为false 可以将默认的菜单栏隐藏
     autoHideMenuBar: true, // 
     icon: 'chrismas.png',// 设置一个图片路径，可以自定义当前应用的显示图标
     webPreferences: { // 网页功能设置
@@ -26,7 +26,7 @@ const createWindow = () => {
   //   mainWindow.show()
   // })
 
-
+  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
   // 让主窗口加载文件 html文件，显示具体内容
   mainWindow.loadFile('index.html')
 
@@ -37,29 +37,49 @@ const createWindow = () => {
   })
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
+
+  // 监听窗口最小化事件
+  ipcMain.on('minimise-window',()=>{
+    console.log('ssss')
+    mainWindow.minimize()
+  })
+
+  // 监听窗口全屏事件
+  ipcMain.on('fullScreen-window',()=>{
+    if(mainWindow.isMaximized()){
+      mainWindow.restore()
+    }else{
+      mainWindow.maximize()
+    }
+  })
+
+  ipcMain.on('close-window',()=>{
+    mainWindow.close()
+  })
 }
 
 
-ipcMain.on('create-new-window', () => {
-  const newWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-  newWindow.loadFile('indexMin.html');
-  newWindow.on('close',()=>{
-    newWindow=null
-  })
-});
+
 
 // 控制ready事件
 // ready事件是：当 Electron 完成初始化时，发出一次。
 app.on('ready', () => {
   // 监听消息
 
+  ipcMain.on('create-new-window', () => {
+    const newWindow = new BrowserWindow({
+      width: 400,
+      height: 300,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    });
+    newWindow.loadFile('indexMin.html');
+    newWindow.on('close',()=>{
+      newWindow=null
+    })
+  });
   
   app.on('activate', () => {
     // 在 macOS 系统内, 如果没有已开启的应用窗口
@@ -68,6 +88,7 @@ app.on('ready', () => {
   })
 
   createWindow()
+
 })
 
 // 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此, 通常

@@ -4,12 +4,60 @@
 <head>
   <meta charset="UTF-8">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <title></title>
 </head>
+<style>
+  /* 重置部分默认样式 */
+  body,
+  ul,
+  li,
+  a {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+  }
+
+  .window {
+    padding: 5px 2px;
+    border-bottom: 1px solid #ccc;
+  }
+  .windowTool{
+    column-gap: 10px;
+  }
+  .windowTool span{
+    cursor: pointer;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .f-col-center {
+    align-items: center;
+  }
+
+  .f-row-between {
+    justify-content: space-between;
+  }
+</style>
+
 <body>
-  <h2>窗口标题</h2>
+  <div class="window flex f-col-center f-row-between">
+    <div>
+      <img src="" />
+      <div class="title"></div>
+    </div>
+    <div class="windowTool flex f-col-center">
+      <span class="minimise">-</span>
+      <span class="fullScreen">[]</span>
+      <span class="close">X</span>
+    </div>
+  </div>
   <button id="btn">点击打开新窗口</button>
+  <div></div>
   <script src="./renderer.js"></script>
 </body>
 

@@ -35,6 +35,26 @@
 // })
 
 const { ipcRenderer } = require('electron');
-document.getElementById('btn').addEventListener('click', () => {
-  ipcRenderer.send('create-new-window');
-});
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('1111')
+  // 打开新窗体
+  document.getElementById('btn').addEventListener('click', () => {
+    ipcRenderer.send('create-new-window');
+  });
+
+  // 获取元素添加点击操作的监听
+  let minimiseBtn = document.getElementsByClassName('windowTool')[0].getElementsByClassName('minimise')[0]
+  minimiseBtn.addEventListener('click', () => {
+    ipcRenderer.send('minimise-window');
+  })
+
+  let fullScreenBtn = document.getElementsByClassName('windowTool')[0].getElementsByClassName('fullScreen')[0]
+  fullScreenBtn.addEventListener('click', () => {
+    ipcRenderer.send('fullScreen-window');
+  })
+
+  let closeBtn = document.getElementsByClassName('windowTool')[0].getElementsByClassName('close')[0]
+  closeBtn.addEventListener('click', () => {
+    ipcRenderer.send('close-window');
+  })
+})
