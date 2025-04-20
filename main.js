@@ -9,9 +9,9 @@ const createWindow = () => {
   let mainWindow = new BrowserWindow({
     width: 1000,
     height: 900,
-    title: 'alita learn',
+    title: 'alita learn', // 设置原生窗口的标题
     backgroundColor: '#fff',
-    frame: false, // 用于自定义menu 设置为false 可以将默认的菜单栏隐藏
+    frame: false, // 无边框窗口（不带外壳--窗口边框、工具栏） 用于自定义menu 设置为false 可以将默认的菜单栏隐藏
     autoHideMenuBar: true, // 
     icon: 'chrismas.png',// 设置一个图片路径，可以自定义当前应用的显示图标
     webPreferences: { // 网页功能设置
@@ -21,6 +21,7 @@ const createWindow = () => {
     }
   })
   mainWindow.loadURL('https://github.com')
+  mainWindow.setTitle('我的无框窗口'); // 设置窗口标题
   // 解决闪烁问题
   // mainWindow.once('ready-to-show', () => {
   //   mainWindow.show()
@@ -30,31 +31,39 @@ const createWindow = () => {
   // 让主窗口加载文件 html文件，显示具体内容
   mainWindow.loadFile('index.html')
 
-  // 监听窗口关闭事件
+  //  在窗口要关闭的时候触发。 它在DOM 的beforeunload 和 unload 事件之前触发. 调用event.preventDefault()将阻止这个操作。
   mainWindow.on('close', () => {
     console.log('8888----close window')
+    // mainWindow = null
+  })
+// 在窗口关闭时触发 当你接收到这个事件的时候, 你应当移除相应窗口的引用对象，避免再次使用它.
+  mainWindow.on('closed', () => {
     mainWindow = null
   })
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
   // 监听窗口最小化事件
-  ipcMain.on('minimise-window',()=>{
-    console.log('ssss')
+  ipcMain.on('minimise-window', () => {
     mainWindow.minimize()
   })
 
   // 监听窗口全屏事件
-  ipcMain.on('fullScreen-window',()=>{
-    if(mainWindow.isMaximized()){
+  ipcMain.on('fullScreen-window', () => {
+    if (mainWindow.isMaximized()) {
       mainWindow.restore()
-    }else{
+      // mainWindow.unmaximize() 这个也行
+    } else {
       mainWindow.maximize()
     }
   })
 
-  ipcMain.on('close-window',()=>{
+  ipcMain.on('close-window', () => {
     mainWindow.close()
+  })
+
+  ipcMain.on('destroy-window', () => {
+    mainWindow.destroy()
   })
 }
 
@@ -76,11 +85,11 @@ app.on('ready', () => {
       },
     });
     newWindow.loadFile('indexMin.html');
-    newWindow.on('close',()=>{
-      newWindow=null
+    newWindow.on('close', () => {
+      newWindow = null
     })
   });
-  
+
   app.on('activate', () => {
     // 在 macOS 系统内, 如果没有已开启的应用窗口
     // 点击托盘图标时通常会重新创建一个新窗口 

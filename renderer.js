@@ -36,7 +36,22 @@
 
 const { ipcRenderer } = require('electron');
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('1111')
+  // 关闭窗口前 弹出确认框 进行相应操作
+  // 使用beforeunload处理程序来决定是否关闭窗口
+  window.onbeforeunload = () => {
+    const closeDom = document.getElementsByClassName('isClose')[0]
+    closeDom.style.display = 'block'
+    let yesBtn = closeDom.getElementsByTagName('span')[0]
+    yesBtn.addEventListener('click', () => {
+      ipcRenderer.send('destroy-window');
+    })
+
+    let noBtn = closeDom.getElementsByTagName('span')[1]
+    noBtn.addEventListener('click', () => {
+      closeDom.style.display = 'none'
+    })
+    return false
+  }
   // 打开新窗体
   document.getElementById('btn').addEventListener('click', () => {
     ipcRenderer.send('create-new-window');

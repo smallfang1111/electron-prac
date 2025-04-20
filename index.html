@@ -24,10 +24,12 @@
     padding: 5px 2px;
     border-bottom: 1px solid #ccc;
   }
-  .windowTool{
+
+  .windowTool {
     column-gap: 10px;
   }
-  .windowTool span{
+
+  .windowTool span {
     cursor: pointer;
   }
 
@@ -42,13 +44,30 @@
   .f-row-between {
     justify-content: space-between;
   }
+
+  .isClose{
+    display: none;
+    width: 300px;
+    height: auto;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+
+  .close_btn {
+    display: flex;
+    column-gap: 20px;
+    cursor: pointer;
+  }
 </style>
 
 <body>
   <div class="window flex f-col-center f-row-between">
-    <div>
+    <div class="flex f-col-center">
       <img src="" />
-      <div class="title"></div>
+      <div class="title">alita learn</div>
     </div>
     <div class="windowTool flex f-col-center">
       <span class="minimise">-</span>
@@ -57,7 +76,12 @@
     </div>
   </div>
   <button id="btn">点击打开新窗口</button>
-  <div></div>
+  <!-- 定义浮窗设置组织窗口关闭 -->
+  <div class="isClose">
+    <h3>是否关闭当前应用</h3>
+    <p>系统可能不会保存您的所有更改</p>
+    <p class="close_btn"><span>是</span><span>否</span></p>
+  </div>
   <script src="./renderer.js"></script>
 </body>
 
