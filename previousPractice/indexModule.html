@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主界面</title>
+</head>
+
+<body>
+    <h2>子窗口及模态窗口</h2>
+    <button id="btn">新增窗口</button>
+    <script>
+        const { ipcRenderer } = require('electron');
+        window.addEventListener('DOMContentLoaded', () => {
+            let oBtn = document.getElementById('btn')
+            oBtn.addEventListener('click', () => {
+                ipcRenderer.send('create-child-window'); // 发送创建子窗口的请求
+            })
+        })
+    </script>
+</body>
+
+</html>

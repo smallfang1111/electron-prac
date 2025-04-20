@@ -1,8 +1,9 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, dialog, Menu, ipcMain, webContents } = require('electron/main')
+const { app, BrowserWindow, ipcMain } = require('electron/main')
+const { initialize, enable } = require('@electron/remote/main');
 // 在你文件顶部导入 Node.js 的 path 模块
 const path = require('node:path')
-
+let childWindow = null;
 const createWindow = () => {
   // 新建窗口
   //  让窗口加载了一个界面，这个界面就是用web 技术实现 ，这个界面是运行在渲染进程中的 
@@ -18,6 +19,7 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js'),//在页面运行其他脚本之前预先加载指定的脚本 无论页面是否集成Node, 此脚本都可以访问所有Node API 脚本路径为文件的绝对路径
       nodeIntegration: true,//是否启用Node integration.  默认false
       contextIsolation: false,//是否在独立 JavaScript 环境中运行 Electron API和指定的preload 脚本. 默认为 true。
+      enableRemoteModule: true,
     }
   })
   mainWindow.loadURL('https://github.com')
@@ -27,16 +29,23 @@ const createWindow = () => {
   //   mainWindow.show()
   // })
 
+
+  // 用于解决remote使用问题
+  initialize() //  初始化 @electron/remote
+  enable(mainWindow.webContents)  // 为当前窗口启用 @electron/remote
+
+
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
   // 让主窗口加载文件 html文件，显示具体内容
-  mainWindow.loadFile('index.html')
+  // mainWindow.loadFile('./previousPractice/index.html') // 一般是index.html
+  mainWindow.loadFile('./previousPractice/indexModule.html')
 
   //  在窗口要关闭的时候触发。 它在DOM 的beforeunload 和 unload 事件之前触发. 调用event.preventDefault()将阻止这个操作。
   mainWindow.on('close', () => {
     console.log('8888----close window')
     // mainWindow = null
   })
-// 在窗口关闭时触发 当你接收到这个事件的时候, 你应当移除相应窗口的引用对象，避免再次使用它.
+  // 在窗口关闭时触发 当你接收到这个事件的时候, 你应当移除相应窗口的引用对象，避免再次使用它.
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -65,6 +74,32 @@ const createWindow = () => {
   ipcMain.on('destroy-window', () => {
     mainWindow.destroy()
   })
+
+  // 接收渲染进程发送的创建子窗口的请求
+  ipcMain.on('create-child-window', () => {
+    console.log(childWindow)
+    if (!childWindow) {
+      // 创建子窗口
+      childWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        parent: mainWindow, // 设置父窗口
+        modal: true, // 使子窗口模态化（可选）
+        webPreferences: {
+          nodeIntegration: true,
+          contextIsolation: false,
+        },
+      });
+
+      // 加载子窗口的 HTML 文件
+      childWindow.loadFile('child.html');
+
+      // 监听子窗口关闭事件
+      childWindow.on('closed', () => {
+        childWindow = null;
+      });
+    }
+  });
 }
 
 
@@ -74,7 +109,7 @@ const createWindow = () => {
 // ready事件是：当 Electron 完成初始化时，发出一次。
 app.on('ready', () => {
   // 监听消息
-
+  // 新窗口的配置
   ipcMain.on('create-new-window', () => {
     const newWindow = new BrowserWindow({
       width: 400,
