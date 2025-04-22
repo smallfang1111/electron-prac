@@ -1,5 +1,5 @@
 const { app, BrowserWindow, Menu } = require('electron')
-console.log(process.platform)  // 区分操作系统
+// console.log(process.platform)  // 区分操作系统
 const createWindow = () => {
     let mainWin = new BrowserWindow({
         title: '自定义菜单',
@@ -15,32 +15,48 @@ const createWindow = () => {
     // 定义自己需要的菜单项
     let menuTemp = [
         {
-            label: '文件', submenu: [
+            label: '角色', submenu: [
                 {
-                    label: '关于',
-                    role: 'about'
+                    label: '复制',
+                    role: 'copy'
                 },
-                { type: 'separator' },
                 {
-                    label: 'services', click() {
-                        console.log('1212')
-                    }
+                    label: '剪切', role: 'cut'
                 },
-                { type: 'separator' },
-                { role: 'hide' },
-                { role: 'hideOthers' },
-                { role: 'unhide' },
-                { type: 'separator' },
-                { role: 'quit' }
+                { label: "粘贴", role: 'paste' },
+                { label: "最小化", role: 'minimize' },
             ]
         },
-        { label: '编辑' }
+        {
+            label: '类型',
+            submenu: [
+                { label: '选项一', type: 'checkbox' },
+                { label: '选项二', type: 'checkbox' },
+                { label: '选项三', type: 'checkbox' },
+                { type: 'separator' },
+                { label: 'item1', type: 'radio' },
+                { label: 'item2', type: 'radio' },
+                { label: 'item3', type: 'radio' },
+                { type: 'separator' },
+                { label: 'windows', type: 'submenu', role: 'windowMenu' },
+            ]
+        },
+        {
+            label: '其他', submenu: [
+                {
+                    // accelerator 若存在则指向该项的快捷键
+                    label: '打开', icon: './chrismas.png', accelerator: 'ctrl+o', click: () => {
+                        console.log('打开执行了')
+                    }
+                }
+            ]
+        }
     ]
 
     // 利用上述模板，生成菜单项
     let menu = Menu.buildFromTemplate(menuTemp)
 
-    // 将上述的自定义惨淡添加到应用里
+    // 将上述的自定义菜单添加到应用里
     Menu.setApplicationMenu(menu)
 
     mainWin.loadFile('indexMenu.html')

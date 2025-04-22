@@ -1,5 +1,4 @@
-// 预加载脚本
-const { contextBridge, ipcRenderer} = require('electron')
+
 
 // 所有的 Node.js API接口 都可以在 preload 进程中被调用.
 // 它拥有与Chrome扩展一样的沙盒。
@@ -42,3 +41,12 @@ const { contextBridge, ipcRenderer} = require('electron')
 // })
 //预加载脚本之后 你的渲染器进程应该可以访问 window.electronAPI.onUpdateCounter() 监听器函数。
 
+
+
+// 预加载脚本
+const { contextBridge, ipcRenderer } = require('electron/renderer')
+// 你的渲染器进程可以访问 window.electronAPI.onUpdateCounter() 监听器函数。
+contextBridge.exposeInMainWorld('electronAPI', {
+    createMenu: () => ipcRenderer.send('create-menu'),
+    addMenuItem: (inputVal) => ipcRenderer.send('add-menu-item',inputVal)
+})
