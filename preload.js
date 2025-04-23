@@ -50,3 +50,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     createMenu: () => ipcRenderer.send('create-menu'),
     addMenuItem: (inputVal) => ipcRenderer.send('add-menu-item',inputVal)
 })
+
+ipcRenderer.on('log', (event, message) => {
+    console.log(message); // 打印到浏览器控制台
+  });

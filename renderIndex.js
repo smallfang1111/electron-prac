@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     })
     addMenuItemBtn.addEventListener('click', () => {
-        window.electronAPI.addMenuItem(textInputVal.value)
+        window.electronAPI.addMenuItem(textInputVal.value.trim())
     })
 
 })
