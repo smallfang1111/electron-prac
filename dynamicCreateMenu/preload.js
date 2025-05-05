@@ -48,5 +48,6 @@ const { contextBridge, ipcRenderer } = require('electron/renderer')
 // 你的渲染器进程可以访问 window.electronAPI.onUpdateCounter() 监听器函数。
 contextBridge.exposeInMainWorld('electronAPI', {
     createMenu: () => ipcRenderer.send('create-menu'),
-    addMenuItem: (inputVal) => ipcRenderer.send('add-menu-item',inputVal)
+    addMenuItem: (inputVal) => ipcRenderer.send('add-menu-item',inputVal),
+    rightClick:()=>ipcRenderer.send('right-click')
 })

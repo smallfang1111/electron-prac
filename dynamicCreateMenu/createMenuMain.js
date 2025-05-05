@@ -14,7 +14,7 @@ const createWindow = () => {
             enableRemoteModule: true
         }
     })
-    mainWin.loadFile('indexMenuMain.html')
+    mainWin.loadFile('./dynamicCreateMenu/indexMenuMain.html')
     mainWin.on('closed', () => {
         mainWin = null
     })
@@ -25,25 +25,25 @@ app.on('ready', () => {
     // 自定义全局变量存放菜单项
     ipcMain.on('create-menu', () => {
         // 创建菜单
-        let menuFile = new MenuItem({
+        const menuFile = new MenuItem({
             label: '文件',
             type: 'normal'
         })
-        let menuEdit = new MenuItem({
+        const menuEdit = new MenuItem({
             label: '编辑',
             type: 'normal'
         })
 
-        let customMenu = new MenuItem({
+        const customMenu = new MenuItem({
             label: '自定义菜单项',
-            submenu: new Menu(),
-            type: 'normal'
+            submenu: new Menu()
         })
-        appMenu.append(menuFile)
-        appMenu.append(menuEdit)
-        appMenu.append(customMenu)
-        Menu.setApplicationMenu(appMenu)
-
+        if (!appMenu.items.length) {
+            appMenu.append(menuFile)
+            appMenu.append(menuEdit)
+            appMenu.append(customMenu)
+            Menu.setApplicationMenu(appMenu)
+        }
     })
 
     ipcMain.on('add-menu-item', (event, val) => {
@@ -56,19 +56,38 @@ app.on('ready', () => {
                 if (!fileMenu.submenu) {
                     fileMenu.submenu = new Menu()
                 }
-                const newItem = new MenuItem({
-                    label: val,
-                    click: () => {
-                        console.log('点击了嘿嘿嘿')
-                    }
-                })
-                // 添加到子菜单
-                fileMenu.submenu.append(newItem)
-                console.log(fileMenu, '111')
-                // 更新应用菜单
-                Menu.setApplicationMenu(appMenu)
+                if (val) {
+                    const newItem = new MenuItem({
+                        label: val,
+                        click: () => {
+                            console.log('点击了嘿嘿嘿')
+                        }
+                    })
+                    // 添加到子菜单
+                    fileMenu.submenu.append(newItem)
+
+                    // 更新应用菜单
+                    Menu.setApplicationMenu(appMenu)
+                }
+
             }
         }
+    })
+
+    ipcMain.on('right-click', () => {
+        let contextTemp = [
+            { label: 'run code' },
+            { label: '转到定义' },
+            { label: 'seperator' },
+            {
+                label: '其他功能',
+                click: () => {
+                    console.log('1-2-3- ')
+                }
+            }
+        ]
+        let menu = Menu.buildFromTemplate(contextTemp)
+        menu.popup()
     })
     // 监听消息
     app.on('activate', () => {

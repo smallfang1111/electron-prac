@@ -12,4 +12,9 @@ window.addEventListener('DOMContentLoaded', () => {
         window.electronAPI.addMenuItem(textInputVal.value.trim())
     })
 
+    window.addEventListener('contextmenu', (ev) => {
+        ev.preventDefault()
+        window.electronAPI.rightClick()
+    }, false)
+
 })
