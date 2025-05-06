@@ -18,6 +18,20 @@ const createWindow = () => {
     mainWin.on('closed', () => {
         mainWin = null
     })
+
+    let temp = [
+        {
+            label: 'send', click: () => {
+                // console.log(BrowserWindow.getFocusedWindow().webContents)
+                BrowserWindow.getFocusedWindow().webContents.send('mtp','来自于主进程的消息')
+            }
+        }
+    ]
+
+
+    let menu = Menu.buildFromTemplate(temp)
+    Menu.setApplicationMenu(menu)
+    mainWin.webContents.openDevTools()
 }
 // 控制ready事件
 // ready事件是：当 Electron 完成初始化时，发出一次。
@@ -63,6 +77,8 @@ app.on('ready', () => {
                             console.log('点击了嘿嘿嘿')
                         }
                     })
+                    // 回送消息
+                    event.sender.send('back-msg', '这是一条来自主进程的异步消息')
                     // 添加到子菜单
                     fileMenu.submenu.append(newItem)
 
@@ -74,6 +90,10 @@ app.on('ready', () => {
         }
     })
 
+    ipcMain.on('add-menu-item-sync', (event, val) => {
+        event.returnValue = '来自于主进程的同步消息'
+    })
+
     ipcMain.on('right-click', () => {
         let contextTemp = [
             { label: 'run code' },
@@ -82,7 +102,7 @@ app.on('ready', () => {
             {
                 label: '其他功能',
                 click: () => {
-                    console.log('1-2-3- ')
+                    console.log('1-2-3ssasasdasDASDAS撒- ')
                 }
             }
         ]
@@ -99,3 +119,4 @@ app.on('ready', () => {
     createWindow()
 
 })
+
