@@ -3,4 +3,4 @@ window.addEventListener('DOMContentLoaded', () => {
     oBtn1.onclick=()=>{
         window.electronAPI.showMessge()
     }
-})
+})    
